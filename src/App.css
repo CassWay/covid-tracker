@@ -2,6 +2,10 @@
   margin: 0;
 }
 
+body {
+  background-color: #c3c4c7;
+}
+
 .app__header {
   display: flex;
   align-items: center;
@@ -9,3 +13,7 @@
   margin-bottom: 20px;
 }
 
+.app__stats {
+  display: flex;
+  justify-content: space-between;
+}
