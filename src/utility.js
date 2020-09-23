@@ -1,5 +1,5 @@
-export const sortData = (data) => (
-    const sortedData = [...data];
+export const sortData = (data) => {
+	const sortedData = [...data];
 
-    sortedData.sort()
-)
+	return sortedData.sort((a, b) => (a.cases > b.cases ? -1 : 1));
+};
