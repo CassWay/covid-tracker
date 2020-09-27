@@ -48,9 +48,8 @@ const options = {
 };
 
 const buildChartData = (data, casesType) => {
-	const chartData = [];
+	let chartData = [];
 	let lastDataPoint;
-
 	for (let date in data.cases) {
 		if (lastDataPoint) {
 			let newDataPoint = {

@@ -11,8 +11,9 @@ import InfoBox from "./InfoBox";
 import Map from "./Map";
 import Table from "./Table";
 import LineGraph from "./LineGraph";
-import { sortData } from "./utility";
+import { sortData, prettyPrintStat } from "./utility";
 import "leaflet/dist/leaflet.css";
+import numeral from "numeral";
 
 const App = () => {
 	const [country, setInputCountry] = useState("worldwide");
@@ -89,21 +90,29 @@ const App = () => {
 				</div>
 				<div className="app__stats">
 					<InfoBox
+						onClick={(event) => setCasesType("cases")}
 						title="Coronavirus Cases"
-						cases={countryInfo.todayCases}
-						total={countryInfo.cases}
+						isRed
+						active={casesType === "cases"}
+						cases={prettyPrintStat(countryInfo.todayCases)}
+						total={numeral(countryInfo.cases).format("0.0a")}
 					/>
 
 					<InfoBox
+						onClick={(event) => setCasesType("recovered")}
 						title="Recovered"
-						cases={countryInfo.todayRecovered}
-						total={countryInfo.recovered}
+						active={casesType === "recovered"}
+						cases={prettyPrintStat(countryInfo.todayRecovered)}
+						total={numeral(countryInfo.recovered).format("0.0a")}
 					/>
 
 					<InfoBox
+						onClick={(event) => setCasesType("deaths")}
 						title="Deaths"
-						cases={countryInfo.todayDeaths}
-						total={countryInfo.deaths}
+						isRed
+						active={casesType === "deaths"}
+						cases={prettyPrintStat(countryInfo.todayDeaths)}
+						total={numeral(countryInfo.deaths).format("0.0a")}
 					/>
 				</div>
 				{/* Map */}
@@ -116,12 +125,14 @@ const App = () => {
 			</div>
 			<Card className="app__right">
 				<CardContent>
-					<h3>Live Cases By Country</h3>
-					{/* Table */}
-					<Table countries={tableData} />
-					<h3>Worldwide new Cases </h3>
-					{/* Graph */}
-					<LineGraph />
+					<div className="app__information">
+						<h3>Live Cases By Country</h3>
+						{/* Table */}
+						<Table countries={tableData} />
+						<h3>Worldwide new {casesType} </h3>
+						{/* Graph */}
+						<LineGraph casesType={casesType} />
+					</div>
 				</CardContent>
 			</Card>
 		</div>
