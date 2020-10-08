@@ -47,60 +47,75 @@ const options = {
 	},
 };
 
-const buildChartData = (data, casesType) => {
-	let chartData = [];
-	let lastDataPoint;
-	for (let date in data.cases) {
-		if (lastDataPoint) {
-			let newDataPoint = {
-				x: date,
-				y: data[casesType][date] - lastDataPoint,
-			};
-			chartData.push(newDataPoint);
-		}
-		lastDataPoint = data[casesType][date];
+const casesTypeColors = {
+	cases: {
+		hex: "#7F0099",
+		rgb: "rgb(125,0,153)",
+		half_op: "rgba(125,0,153, 0.5)",
+		multiplier: 800,
+	},
+	recovered: {
+		hex: "#7dd71d",
+		rgb: "rgb(125, 215, 29)",
+		half_op: "rgba(125, 215, 29, 0.5)",
+		multiplier: 1200,
+	},
+	deaths: {
+		hex: "#fb4443",
+		rgb: "rgb(251, 68, 67)",
+		half_op: "rgba(251, 68, 67, 0.5)",
+		multiplier: 2000,
 	}
-	return chartData;
 };
 
-function LineGraph({ casesType }) {
+const LineGraph = ({casesType = "cases", ...props}) => {
 	const [data, setData] = useState({});
+	const buildChartData = (data) => {
+		const chartData = [];
+		let lastDataPoint;
 
-	// https://disease.sh/v3/covid-19/historical/all?lastdays=120
+		for (let date in data.cases) {
+			if (lastDataPoint) {
+				const newDataPoint = {
+					x: date,
+					y: data[casesType][date] - lastDataPoint,
+				};
+				chartData.push(newDataPoint);
+			}
+			lastDataPoint = data[casesType][date];
+		}
+		return chartData;
+	};
 	useEffect(() => {
 		const fetchData = async () => {
 			await fetch("https://disease.sh/v3/covid-19/historical/all?lastdays=120")
-				.then((response) => {
-					return response.json();
-				})
+				.then((response) => response.json())
 				.then((data) => {
-					let chartData = buildChartData(data, casesType);
+					const chartData = buildChartData(data);
 					setData(chartData);
 					console.log(chartData);
-					// buildChart(chartData);
 				});
 		};
 		fetchData();
-	}, [casesType]);
-
+	}, [buildChartData, casesType]);
 	return (
-		<div>
+		<div className={props.className}>
 			{data?.length > 0 && (
 				<Line
+					options={options}
 					data={{
 						datasets: [
 							{
-								backgroundColor: "rgba(204, 16, 52, 0.5)",
-								borderColor: "#CC1034",
+								borderColor: casesTypeColors[casesType].hex,
+								backgroundColor: casesTypeColors[casesType].half_op,
 								data: data,
-							},
-						],
+							}
+						]
 					}}
-					options={options}
 				/>
 			)}
 		</div>
 	);
-}
+};
 
 export default LineGraph;

@@ -1,8 +1,9 @@
 .table {
     margin-top: 20px;
-    overflow: scroll;
-    height: 400px;
+    overflow-y: scroll;
+    height: 500px;
     color: #6a5d5d;
+    background-color: rgb(50, 49, 51);
 }
 
 .table tr {
@@ -15,5 +16,12 @@
 }
 
 .table tr:nth-of-type(odd){
+    color: rgb(14, 1, 36);
     background-color: #f3f2f8;
+}
+
+.info-flag{
+    height: 30%;
+    width: 60%;
+    border-radius: 10%;
 }
